@@ -10,10 +10,20 @@ var tpl *template.Template
 
 func main() {
 
-	tpl, _ = template.ParseFiles("index.html")
-	// handle http req's at the path /hello
-	// ListenandServe starts the server HTTP serveer and listens for any req's on it's path
-	http.HandleFunc("/hello", helloHandleFunc) // helloHandleFunc is registered the /hello path
+	// HandleFunc(patter string, handler func(ResponseWriter, *Request))
+	// HandleFunc registers the handler function for the given patter in the DefultServerMux
+
+	// ListenAndServer(addr string, handler Handler) error
+	// listens on the TCP address and calls Serve handler to HANDLE reqs
+
+	// templates are typically strings or files containing placeholders or special syntax for dynamic content
+	// Parsing is just reading the template for those strings, plaecholders, and special syntax
+	// exmp ~> templateString := "Hello, {{.Name}}"
+
+	// tpl, _ = template.ParseFiles("index.html") // , _ we aren't accounting for errors at the moment so this a placeholder throwaway for err
+	tpl, _ = template.ParseFiles("data1/index2.html") // After main.go has been searched, Go looks for the specific route to the template being served
+
+	http.HandleFunc("/hello", helloHandleFunc)
 	http.HandleFunc("/about", aboutHandleFunc)
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(":5555", nil) // nill invokes DefaultServeMux
@@ -34,5 +44,6 @@ func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	// Take the template and process it to produce desired HTML, CSS, etc
 	tpl.Execute(w, nil)
 }
