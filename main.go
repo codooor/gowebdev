@@ -1,12 +1,13 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"html/template"
 	"net/http"
 )
 
 var tpl *template.Template
+var name = "Robert"
 
 func main() {
 
@@ -29,12 +30,13 @@ func main() {
 	// func (t *Template) ParseGlob(pattern string) (*Template, error)
 	// ParseGlob looks for a mathing pattern and Parses all files at once ~ convenient to bulk-load
 	// tpl, _ = template.ParseGlob("templates/*.html") // * is the wildcard allowing us to have anything in front as long as it ends with html
-	tpl, _ = tpl.ParseGlob("templates/*.html") // works the same as above
+	tpl, _ = tpl.ParseGlob("template2/*.html") // works the same as above
 
 	// registered route handlers
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/hello", helloHandleFunc)
-	http.HandleFunc("/about", aboutHandleFunc)
+	// http.HandleFunc("/", indexHandler)
+	// http.HandleFunc("/hello", helloHandleFunc)
+	// http.HandleFunc("/about", aboutHandleFunc)
+	http.HandleFunc("/welcome", welcomeHandler)
 
 	http.ListenAndServe(":5555", nil) // nill invokes DefaultServeMux
 	// ServeMux is an HTTP request multiplexer. It matches the URL of each incoming req
@@ -58,15 +60,21 @@ func main() {
 
 // allows us read and write multiple templates at once
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	// Take the template and process it to produce desired HTML, CSS, etc
-	tpl.ExecuteTemplate(w, "index.html", nil)
-}
+// func indexHandler(w http.ResponseWriter, r *http.Request) {
+// 	// Take the template and process it to produce desired HTML, CSS, etc
+// 	tpl.ExecuteTemplate(w, "index.html", nil)
+// }
 
-func helloHandleFunc(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "hello.html", nil)
-}
+// func helloHandleFunc(w http.ResponseWriter, r *http.Request) {
+// 	tpl.ExecuteTemplate(w, "hello.html", nil)
+// }
 
-func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
-	tpl.ExecuteTemplate(w, "about.html", nil)
+// func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
+// 	tpl.ExecuteTemplate(w, "about.html", nil)
+// }
+
+func welcomeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("indexHandler Running")
+	// func (t *Template) ExecuteTemplate(wr io.Write, name string, data interface{}) error
+	tpl.ExecuteTemplate(w, "welcome.html", name)
 }
