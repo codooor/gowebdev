@@ -26,8 +26,10 @@ func main() {
 
 	// The above i useful in showcasing how templates are wr, re
 	// modern web development requires more than a single entry
-	// func ParseGlob(pattern string) (*Template, error)
-	tpl, _ = template.ParseGlob("templates/*.html") // * is the wildcare allowing us to have anything in front as long as it ends with html
+	// func (t *Template) ParseGlob(pattern string) (*Template, error)
+	// ParseGlob looks for a mathing pattern and Parses all files at once ~ convenient to bulk-load
+	// tpl, _ = template.ParseGlob("templates/*.html") // * is the wildcard allowing us to have anything in front as long as it ends with html
+	tpl, _ = tpl.ParseGlob("templates/*.html") // works the same as above
 
 	// registered route handlers
 	http.HandleFunc("/", indexHandler)
