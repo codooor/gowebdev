@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"html/template"
 	"net/http"
 )
@@ -21,11 +21,19 @@ func main() {
 	// exmp ~> templateString := "Hello, {{.Name}}"
 
 	// tpl, _ = template.ParseFiles("index.html") // , _ we aren't accounting for errors at the moment so this a placeholder throwaway for err
-	tpl, _ = template.ParseFiles("data1/index2.html") // After main.go has been searched, Go looks for the specific path to the template being read
+	// tpl, _ = template.ParseFiles("data1/index2.html") // After main.go has been searched, Go looks for the specific path to the template being read
+	// tpl, _ = template.ParseFiles("data1/data2/index3.html")
 
+	// The above i useful in showcasing how templates are wr, re
+	// modern web development requires more than a single entry
+	// func ParseGlob(pattern string) (*Template, error)
+	tpl, _ = template.ParseGlob("templates/*.html") // * is the wildcare allowing us to have anything in front as long as it ends with html
+
+	// registered route handlers
+	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/hello", helloHandleFunc)
 	http.HandleFunc("/about", aboutHandleFunc)
-	http.HandleFunc("/", indexHandler)
+
 	http.ListenAndServe(":5555", nil) // nill invokes DefaultServeMux
 	// ServeMux is an HTTP request multiplexer. It matches the URL of each incoming req
 	// against a list of registered patterns and calls the handler for the pattern that closely matches
@@ -35,15 +43,28 @@ func main() {
 // w arg provides methods to send data back to the client if needed.
 // it allows the construction of an HTTP request
 // r arg contains info about the incoming HTTP req, like the method, headers, query params, and body
-func helloHandleFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "r.URL.Path:, %s", r.URL.Path)
-}
 
-func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "This is Go powered website")
-}
+// func helloHandleFunc(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintf(w, "r.URL.Path:, %s", r.URL.Path)
+// }
+
+// func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprint(w, "This is Go powered website")
+// }
+
+// func (t *Template) ExecuteTemplate(wr io.Writer, name string, data interface{})
+
+// allows us read and write multiple templates at once
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// Take the template and process it to produce desired HTML, CSS, etc
-	tpl.Execute(w, nil)
+	tpl.ExecuteTemplate(w, "index.html", nil)
+}
+
+func helloHandleFunc(w http.ResponseWriter, r *http.Request) {
+	tpl.ExecuteTemplate(w, "hello.html", nil)
+}
+
+func aboutHandleFunc(w http.ResponseWriter, r *http.Request) {
+	tpl.ExecuteTemplate(w, "about.html", nil)
 }
