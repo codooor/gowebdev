@@ -21,7 +21,7 @@ func main() {
 	// exmp ~> templateString := "Hello, {{.Name}}"
 
 	// tpl, _ = template.ParseFiles("index.html") // , _ we aren't accounting for errors at the moment so this a placeholder throwaway for err
-	tpl, _ = template.ParseFiles("data1/index2.html") // After main.go has been searched, Go looks for the specific route to the template being served
+	tpl, _ = template.ParseFiles("data1/index2.html") // After main.go has been searched, Go looks for the specific path to the template being read
 
 	http.HandleFunc("/hello", helloHandleFunc)
 	http.HandleFunc("/about", aboutHandleFunc)
