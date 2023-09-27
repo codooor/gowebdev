@@ -6,10 +6,36 @@ import (
 	"net/http"
 )
 
+// Two structures to map a product with product specs
+type prodSpec struct {
+	Size   string
+	Weight float32
+	Descr  string
+}
+
+type product struct {
+	ProdId int
+	Name   string
+	Cost   float64
+	Specs  prodSpec
+}
+
 var tpl *template.Template
-var name = "Robert"
+
+// var name = "Robert"
+var prod1 product
 
 func main() {
+	prod1 = product{
+		ProdId: 15,
+		Name:   "Laptop",
+		Cost:   2000,
+		Specs: prodSpec{
+			Size:   "Normal",
+			Weight: 25,
+			Descr:  "a shiny new gadget",
+		},
+	}
 
 	// HandleFunc(patter string, handler func(ResponseWriter, *Request))
 	// HandleFunc registers the handler function for the given patter in the DefultServerMux
@@ -30,13 +56,15 @@ func main() {
 	// func (t *Template) ParseGlob(pattern string) (*Template, error)
 	// ParseGlob looks for a mathing pattern and Parses all files at once ~ convenient to bulk-load
 	// tpl, _ = template.ParseGlob("templates/*.html") // * is the wildcard allowing us to have anything in front as long as it ends with html
-	tpl, _ = tpl.ParseGlob("template2/*.html") // works the same as above
+	// tpl, _ = tpl.ParseGlob("template2/*.html") // works the same as above
+	tpl, _ = tpl.ParseGlob("template3/*.html")
 
 	// registered route handlers
 	// http.HandleFunc("/", indexHandler)
 	// http.HandleFunc("/hello", helloHandleFunc)
 	// http.HandleFunc("/about", aboutHandleFunc)
-	http.HandleFunc("/welcome", welcomeHandler)
+	// http.HandleFunc("/welcome", welcomeHandler)
+	http.HandleFunc("/product", productInfoHandler)
 
 	http.ListenAndServe(":5555", nil) // nill invokes DefaultServeMux
 	// ServeMux is an HTTP request multiplexer. It matches the URL of each incoming req
@@ -73,8 +101,14 @@ func main() {
 // 	tpl.ExecuteTemplate(w, "about.html", nil)
 // }
 
-func welcomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("indexHandler Running")
-	// func (t *Template) ExecuteTemplate(wr io.Write, name string, data interface{}) error
-	tpl.ExecuteTemplate(w, "welcome.html", name)
+// // func welcomeHandler(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Println("indexHandler Running")
+// 	// func (t *Template) ExecuteTemplate(wr io.Write, name string, data interface{}) error
+// 	tpl.ExecuteTemplate(w, "welcome.html", name)
+// }
+
+func productInfoHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("productInfoHandler Running")
+	// func (t * Template) ExecuteTemplate(wr io.Writer, name string, data interface{})
+	tpl.ExecuteTemplate(w, "product.html", prod1)
 }
